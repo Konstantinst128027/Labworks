@@ -73,18 +73,20 @@ void BMP::Rotate90CounterClockwise()
 
 void BMP::GaussianBlur()
 {
-    const float kernel[3][3] =
-    {
-        {1/16.0f, 2/16.0f, 1/16.0f},
-        {2/16.0f, 4/16.0f, 2/16.0f},
-        {1/16.0f, 2/16.0f, 1/16.0f}
+    const float kernel[3][3] = {
+        {1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f},
+        {2.0f / 16.0f, 4.0f / 16.0f, 2.0f / 16.0f},
+        {1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f}
     };
+    
     std::vector<uint8_t> blurred_data(data.size());
     int channels = info_header.bit_count / 8;
+    int width = info_header.width;
+    int height = info_header.height;
 
-    for (int y = 1; y < info_header.height - 1; y++)
+    for (int y = 0; y < height; y++)
     {
-        for (int x = 1; x < info_header.width - 1; x++)
+        for (int x = 0; x < width; x++)
         {
             for (int c = 0; c < channels; c++)
             {
@@ -94,15 +96,20 @@ void BMP::GaussianBlur()
                 {
                     for (int kx = -1; kx <= 1; kx++)
                     {
-                        int pixel_x = x + kx;
-                        int pixel_y = y + ky;
-                        color += data[(pixel_y * info_header.width + pixel_x) * channels + c] * kernel[ky + 1][kx + 1];
+                        int pixel_x = std::min(std::max(x + kx, 0), width - 1);
+                        int pixel_y = std::min(std::max(y + ky, 0), height - 1);
+
+                        color += data[(pixel_y * width + pixel_x) * channels + c] * kernel[ky + 1][kx + 1];
                     }
                 }
-                blurred_data[(y * info_header.width + x) * channels + c] = static_cast<uint8_t>(color);
+                if (color < 0) color = 0;
+                if (color > 255) color = 255;
+
+                blurred_data[(y * width + x) * channels + c] = static_cast<uint8_t>(color);
             }
         }
     }
+
     data = blurred_data;
 }
 void BMP::Save(const char* filename)

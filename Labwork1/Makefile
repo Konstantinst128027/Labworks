@@ -10,4 +10,4 @@ $(EXECUTABLE): $(OBJ_FILES)
 clean:
 	rm -f *.o $(EXECUTABLE)
 cleanall:
-	rm -f *.o *.bmp $(EXECUTABLE)
+	rm -f *.o GaussianBlur.bmp Rotate90CounterClockwise.bmp Rotated90Clockwise.bmp $(EXECUTABLE)

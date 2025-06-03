@@ -1,4 +1,4 @@
-CCXX = g++
+CXX = g++
 CXXFLAGS = -g -Wall -pthread -I. -Werror -Wpedantic
 PROJ_FILES = $(wildcard *.cpp)
 OBJ_FILES = $(PROJ_FILES:.cpp=.o)

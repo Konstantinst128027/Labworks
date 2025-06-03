@@ -1,4 +1,4 @@
-CCXX = g++
+CXX = g++
 CXXFLAGS = -g -Wall -pthread -I. -Werror -Wpedantic
 PROJ_FILES = $(wildcard *.cpp)
 OBJ_FILES = $(PROJ_FILES:.cpp=.o)
@@ -10,4 +10,4 @@ $(EXECUTABLE): $(OBJ_FILES)
 clean:
 	rm -f *.o $(EXECUTABLE)
 cleanall:
-	rm -f *.o Rotated90Clockwise.bmp Rotate90CounterClockwise.bmp GaussianBlur.bmp $(EXECUTABLE)
+	rm -f *.o GaussianBlur.bmp Rotated90Clockwise.bmp Rotate90CounterClockwise.bmp $(EXECUTABLE)

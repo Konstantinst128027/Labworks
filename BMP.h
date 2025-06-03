@@ -1,5 +1,5 @@
 /* Berezkin Konstantin Evgenievich
-./labwork1 st128027@student.spbu.ru*/
+./labwork st128027@student.spbu.ru*/
 #ifndef BMP_H
 #define BMP_H
 
@@ -8,6 +8,9 @@
 #include <fstream>
 #include <stdexcept>
 #include <cstdint>
+#include <thread>
+#include <atomic>
+#include <functional>
 
 #pragma pack(push, 1)
 struct BMPFileHeader
@@ -48,10 +51,6 @@ struct BMPColorHeader
 class BMP
 {
 public:
-    BMPFileHeader header;
-    BMPInfoHeader info_header;
-    BMPColorHeader color_header;
-    std::vector<uint8_t> data;
 
     BMP(const char* filename);
     void Rotate90Clockwise();
@@ -59,6 +58,32 @@ public:
     void GaussianBlur();
 
     void Save(const char* filename);
+
+private:
+    BMPFileHeader header;
+    BMPInfoHeader info_header;
+    BMPColorHeader color_header;
+    std::vector<uint8_t> data;
+
+    // a framework for flow control
+    struct ThreadPool {
+        std::vector<std::thread> workers; // vector for storing streams
+        std::atomic<bool> stop{false}; // flag for stopping streams
+
+        ~ThreadPool() { // destructor (threads are processed to the end)
+            {
+                stop = true; //sets the stop flag
+            }
+            for (std::thread& worker : workers) { // We let them finish
+                if (worker.joinable()) { // checks if it's still working, and if it's working, lets it finish.
+                    worker.join();  // waiting for the completion of threads
+                }
+            }
+        }
+    };
+
+    void ParallelRowProcessing(std::function<void(int)> processRow, int totalRows);
+
 };
 
 #endif

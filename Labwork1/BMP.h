@@ -1,5 +1,5 @@
 /* Berezkin Konstantin Evgenievich
-./assignment4 st128027@student.spbu.ru*/
+./labwork1 st128027@student.spbu.ru*/
 #ifndef BMP_H
 #define BMP_H
 

@@ -53,6 +53,10 @@ class BMP
 public:
 
     BMP(const char* filename);
+    void Rotate90Clockwise_paralell();
+    void Rotate90CounterClockwise_paralell();
+    void GaussianBlur_paralell();
+    
     void Rotate90Clockwise();
     void Rotate90CounterClockwise();
     void GaussianBlur();
@@ -81,7 +85,7 @@ private:
             }
         }
     };
-
+    
     void ParallelRowProcessing(std::function<void(int)> processRow, int totalRows);
 
 };
